@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap');
+:root {
+    /*
+    100: For body background color
+    200: For cards background color
+    300: For chips buttons, dropdowns background color
+    400: For sidebars, navbar background color
+    500: For modal, dialogs background color
+    600: For on background texts color */
+
+    /** CSS DARK THEME PRIMARY COLORS */
+    --color-primary-100: #f2f2f2;
+    --color-primary-200: #f3f3f3;
+    --color-primary-300: #f5f5f5;
+    --color-primary-400: #f6f6f6;
+    --color-primary-500: #f8f8f8;
+    --color-primary-600: #f9f9f9;
+    /** CSS DARK THEME SURFACE COLORS */
+    --color-surface-100: #121212;
+    --color-surface-200: #282828;
+    --color-surface-300: #3f3f3f;
+    --color-surface-400: #575757;
+    --color-surface-500: #717171;
+    --color-surface-600: #8b8b8b;
+    /** CSS DARK THEME MIXED SURFACE COLORS */
+    --color-surface-mixed-100: #4c4c4c;
+    --color-surface-mixed-200: #5e5e5e;
+    --color-surface-mixed-300: #707070;
+    --color-surface-mixed-400: #838383;
+    --color-surface-mixed-500: #979797;
+    --color-surface-mixed-600: #ababab;
+
+    color: var(--color-primary-600);
+    background-color: var(--color-surface-100);
+    font-family: "kalam", cursive;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
