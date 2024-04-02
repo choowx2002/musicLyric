@@ -81,10 +81,11 @@ class UI {
             playPauseBtn: document.querySelector(".play-pause-button"),
             navBar: document.querySelector(".nav-bar"),
         }
-
-        this.appendLyric();
-        this.fulfillInfo();
-        this.setOffsetOfLyricBox();
+        if(this.info.lyricList){
+            this.appendLyric();
+            this.fulfillInfo();
+            this.setOffsetOfLyricBox();
+        }
     }
 
     appendLyric() {
@@ -201,7 +202,7 @@ const getLyric = (link) => {
 }
 
 var ui
-getLyric("/src/assets/Greg Laswell - And Then You.lrc").then((text) => {
+getLyric("/src/assets/song.lrc").then((text) => {
     ui = new UI(text);
     console.log(ui)
 }).catch((err) => {
