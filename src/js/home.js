@@ -54,7 +54,7 @@ class LrcFile {
     }
 
     lyricList() {
-        return this.createList().filter(l => l.time !== "");
+        return this.createList().filter(l => l.type === "lyric" && l.value !== "");
     }
 
     parseTime(time) {
@@ -62,10 +62,10 @@ class LrcFile {
         return +parts[0] * 60 + +parts[1];
     }
 
-    getInfo(){
+    getInfo() {
         const fullList = this.createList().filter(l => l.time === "");
         let result = {}
-        fullList.forEach(t=>{
+        fullList.forEach(t => {
             result[t.type] = t.value;
         })
         return result;
@@ -79,9 +79,15 @@ class UI {
             lyricBox: document.querySelector(".lyric-box"),
             musicPlayer: document.querySelector(".audio"),
             playPauseBtn: document.querySelector(".play-pause-button"),
-            navBar: document.querySelector(".nav-bar"),
+            artist: document.querySelector(".artist"),
+            title: document.querySelector(".title"),
+            totalTimeBox: document.querySelector(".totalTime"),
+            currentTimeBox: document.querySelector(".currentTime"),
         }
-        if(this.info.lyricList){
+        if (this.info.lyricList()) {
+            this.doms.musicPlayer.addEventListener("loadeddata", ()=>{
+                this.doms.totalTimeBox.innerHTML = this.formatTime(this.doms.musicPlayer.duration)
+            })
             this.appendLyric();
             this.fulfillInfo();
             this.setOffsetOfLyricBox();
@@ -98,28 +104,31 @@ class UI {
             li.classList.add("lyric-text");
             frag.appendChild(li);
         }
+        this.doms.lyricBox.innerHTML = ""
         this.doms.lyricBox.appendChild(frag);
-        this.setupBtnFunc()
+        if (!this.doms.playPauseBtn.children[0].getAttribute("clickFunc")) this.setupBtnFunc()
     }
 
-    fulfillInfo(){
+    fulfillInfo() {
         const result = this.info.getInfo();
-        console.log(result)
-        let html = `<h2 class="title">${result?.title}</h2>
-        <span class="artist">${result.artist}</span>
-        `;
-        this.doms.navBar.innerHTML = html
+        this.doms.title.innerHTML = result.title
+        this.doms.artist.innerHTML = result.artist
     }
 
-    startMusic() {
-        this.doms.playPauseBtn.children[0].setAttribute("name", "pause-circle-outline");
-        this.doms.musicPlayer.play()
-        this.doms.musicPlayer.addEventListener('timeupdate', () => {
-            this.setOffsetOfLyricBox();
-        });
-        this.doms.musicPlayer.addEventListener("ended", ()=> {
-            this.doms.playPauseBtn.children[0].setAttribute("name", "play-circle-outline");
-        });
+    async startMusic() {
+        try {
+            this.doms.playPauseBtn.children[0].setAttribute("name", "pause-circle-outline");
+            this.doms.musicPlayer.play()
+            this.doms.musicPlayer.addEventListener('timeupdate', () => {
+                this.setOffsetOfLyricBox();
+            });
+            this.doms.musicPlayer.addEventListener("ended", () => {
+                this.doms.playPauseBtn.children[0].setAttribute("name", "play-circle-outline");
+            });
+        } catch (error) {
+            console.error(error)
+        }
+
     }
 
     pauseMusic() {
@@ -135,6 +144,7 @@ class UI {
      */
     findLyricListIndex() {
         var currentTime = this.doms.musicPlayer.currentTime;
+        this.doms.currentTimeBox.innerHTML = this.formatTime(currentTime);
         let lyricList = this.info.lyricList()
         for (let i = 0; i < lyricList.length; i++) {
             if (lyricList[i].time && currentTime < lyricList[i].time) {
@@ -165,28 +175,47 @@ class UI {
             let value = this.doms.lyricBox.children[i].clientHeight;
             height += value
         }
-        if(height <= boxHeight/2 ){
-            let result = boxHeight/2 - height - this.doms.lyricBox.children[index].clientHeight/2
+        if (height <= boxHeight / 2) {
+            let result = boxHeight / 2 - height - this.doms.lyricBox.children[index].clientHeight / 2
             this.doms.lyricBox.style.transform = `translateY(${result}px)`;
             return
         }
-        let result = height - boxHeight/2 + this.doms.lyricBox.children[index].clientHeight/2;
+        let result = height - boxHeight / 2 + this.doms.lyricBox.children[index].clientHeight / 2;
         this.doms.lyricBox.style.transform = `translateY(-${result}px)`;
     }
 
-    setupBtnFunc(){
+    setupBtnFunc() {
         var btn = this.doms.playPauseBtn.children[0]
-        btn.addEventListener("click",()=>{
+        btn.setAttribute("clickFunc", true)
+        btn.addEventListener("click", () => {
             this.clickBtn()
         })
     }
 
-    clickBtn(){
-        if(this.doms.musicPlayer.paused){
+    clickBtn() {
+        console.log("click")
+        if (this.doms.musicPlayer.paused) {
+            console.log("play")
             this.startMusic()
-        }else{
+        } else {
+            console.log("pause")
             this.pauseMusic()
         }
+    }
+
+    changeAudio(fileURL) {
+        this.pauseMusic()
+        this.doms.musicPlayer.src = fileURL;
+        this.findLyricListIndex()
+        this.doms.totalTimeBox.innerHTML = this.formatTime(this.doms.musicPlayer.duration)
+    }
+
+    formatTime(time) {
+        let minutes = Math.floor(time / 60)
+        let timeForSeconds = time - (minutes * 60) // seconds without counted minutes 
+        let seconds = Math.floor(timeForSeconds)
+        let secondsReadable = seconds > 9 ? seconds : `0${seconds}` // To change 2:2 into 2:02
+        return `${minutes}:${secondsReadable}`
     }
 }
 
@@ -210,3 +239,28 @@ const uploadLyric = (link) => getLyric(link).then((text) => {
 })
 
 uploadLyric("src/assets/song.lrc");
+var input = document.createElement('input');
+input.setAttribute("accept", ".mp3, .lrc, .flac")
+input.type = 'file';
+var blob = window.URL || window.webkitURL;
+if (!blob) {
+    console.log('Your browser does not support Blob URLs :(');
+}
+input.onchange = e => {
+    var file = e.target.files[0];
+    if (["audio/mpeg", "audio/flac"].includes(file.type)) {
+        ui.changeAudio(blob.createObjectURL(file))
+    } else {
+        var reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+
+        reader.onload = readerEvent => {
+            var content = readerEvent.target.result;
+            ui = new UI(content);
+        }
+    }
+}
+
+document.querySelector(".uploadBtn").addEventListener("click", () => {
+    input.click();
+})
