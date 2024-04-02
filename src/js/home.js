@@ -202,7 +202,7 @@ const getLyric = (link) => {
 }
 
 var ui
-getLyric("/src/assets/song.lrc").then((text) => {
+getLyric("src/assets/song.lrc").then((text) => {
     ui = new UI(text);
     console.log(ui)
 }).catch((err) => {
