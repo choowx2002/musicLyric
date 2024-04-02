@@ -202,9 +202,11 @@ const getLyric = (link) => {
 }
 
 var ui
-getLyric("src/assets/song.lrc").then((text) => {
+const uploadLyric = (link) => getLyric(link).then((text) => {
     ui = new UI(text);
     console.log(ui)
 }).catch((err) => {
     console.log(err)
 })
+
+uploadLyric("src/assets/song.lrc");
