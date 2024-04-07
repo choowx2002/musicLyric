@@ -31,7 +31,25 @@
           <ion-icon name="play-circle-outline"></ion-icon>
           <ion-icon name="add-circle-outline" class="uploadBtn"></ion-icon>
         </div>
+        <div class="volume-box">
+          <ion-icon name="volume-high"></ion-icon>
+          <input
+            class="volume-input"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="100"
+          />
+        </div>
       </div>
+    </div>
+    <div class="center-box">
+        <div class="volume-percent">0%</div>
+        <div class="line line-1"></div>
+        <div class="line line-2"></div>
+        <div class="line line-3"></div>
+        <div class="line line-4"></div>
     </div>
     <script
       type="module"

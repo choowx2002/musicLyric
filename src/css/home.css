@@ -23,7 +23,7 @@
     color: var(--color-surface-mixed-400);
 }
 
-.nav-bar:hover>.artist, .nav-bar:hover> .duration {
+.nav-bar:hover>.artist, .nav-bar:hover>.duration {
     color: var(--color-primary-400);
 }
 
@@ -83,17 +83,163 @@ li.lyric-text.active {
     box-sizing: border-box;
     text-align: center;
     z-index: 100;
+    display: grid;
+    grid-template-areas: "a c";
 }
 
 .play-pause-button {
-    color: var( --color-primary-600);
+    color: var(--color-primary-600);
     height: 100%;
     font-size: 50px;
     display: flex;
-    justify-content: center;
+    padding-left: 10px;
+    justify-content: left;
+    align-items: center;
+    grid-area: a;
+}
+
+.volume-box {
+    grid-area: c;
+    position: relative;
+    display: flex;
+    justify-content: end;
     align-items: center;
 }
 
-[name="pause-circle-outline"]{
+input[type="range"] {
+    position: absolute;
+    appearance: slider-vertical;
+    width: 40px;
+    right: 10px;
+    top: -120%;
+    transform: translateY(-50%);
+    display: none;
+    accent-color: var(--color-surface-600);
+}
+
+
+[name="volume-high"] {
+    margin-right: 10px;
+    font-size: 40px;
+    color: var(--color-primary-600);
+}
+
+[name="volume-high"]:hover~input[type="range"] {
+    display: block;
+}
+
+input[type="range"]:hover {
+    display: block;
+}
+
+[name="pause-circle-outline"] {
     color: var(--color-surface-600);
+}
+
+.center-box {
+    position: absolute;
+    flex-wrap: wrap;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 30vw;
+    height: 30vw;
+    display: none;
+    justify-content: space-evenly;
+    align-items: end;
+    background-color: var(--color-surface-shadow);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.volume-percent {
+    width: 100%;
+    position: absolute;
+    top: 10px;
+    left: 10%;
+    font-size: 48px;
+}
+
+.line {
+    width: 20%;
+    background-color: var(--color-primary-100);
+    border-radius: 10px 10px 0 0;
+}
+
+.line-4 {
+    height: 100%;
+    animation: line4 1s var(--time) paused forwards;
+}
+
+@keyframes line4 {
+    0% {
+        opacity: 0;
+    }
+
+    75% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.line-3 {
+    height: 75%;
+    animation: line3 1s var(--time) paused forwards;
+}
+
+@keyframes line3 {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    75% {
+        opacity: 1;
+    }
+}
+
+.line-2 {
+    height: 50%;
+    animation: line2 1s var(--time) paused forwards;
+}
+
+@keyframes line2 {
+    0% {
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+}
+
+.line-1 {
+    height: 25%;
+    animation: line1 1s var(--time) paused forwards;
+}
+
+@keyframes line1 {
+    0% {
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 1;
+    }
+
+}
+
+body {
+    position: relative;
 }

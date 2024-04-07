@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap');
 :root {
+    --time : -1s;
     /*
     100: For body background color
     200: For cards background color
@@ -29,6 +30,8 @@
     --color-surface-mixed-400: #838383;
     --color-surface-mixed-500: #979797;
     --color-surface-mixed-600: #ababab;
+
+    --color-surface-shadow: #8b8b8bb8;
 
     color: var(--color-primary-600);
     background-color: var(--color-surface-100);

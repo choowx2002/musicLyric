@@ -83,7 +83,20 @@ class UI {
             title: document.querySelector(".title"),
             totalTimeBox: document.querySelector(".totalTime"),
             currentTimeBox: document.querySelector(".currentTime"),
+            volumeInput: document.querySelector(".volume-input"),
+            centerBox: document.querySelector(".center-box"),
+            vValue: document.querySelector(".volume-percent"),
         }
+        this.doms.volumeInput.addEventListener("input",(ev)=>{
+            this.doms.centerBox.style.display = 'flex';
+            this.doms.vValue.innerHTML = ev.target.value+"%";
+            let volumePercent = ev.target.value / 100
+            this.doms.musicPlayer.volume = volumePercent;
+            document.documentElement.style.setProperty("--time", `-${volumePercent}s`);
+        })
+        this.doms.volumeInput.addEventListener("mouseup",(ev)=>{
+            this.doms.centerBox.style.display = 'none';
+        })
         if (this.info.lyricList()) {
             this.doms.musicPlayer.addEventListener("loadeddata", ()=>{
                 this.doms.totalTimeBox.innerHTML = this.formatTime(this.doms.musicPlayer.duration)
@@ -217,6 +230,8 @@ class UI {
         let secondsReadable = seconds > 9 ? seconds : `0${seconds}` // To change 2:2 into 2:02
         return `${minutes}:${secondsReadable}`
     }
+
+
 }
 
 const getLyric = (link) => {
